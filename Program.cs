@@ -1,4 +1,4 @@
-﻿
+
 namespace ConsoleGame
 {
     internal class Game
@@ -48,13 +48,18 @@ namespace ConsoleGame
                 {
                     Console.WriteLine("Personagem não encontrado.");
                 }
-
+            Console.WriteLine("\nDeseja voltar ao menu? (S/N)");
+                string choice = Console.ReadLine();
+                if (choice.ToUpper() == "N")
+                {
+                    Environment.Exit(0);
+                }
             }
         }
 
         public class Player
         {
-            private int health; // Saude //encapsulation
+            private int health; // Saude 
             public string Name { get; set; } //Nome
             public int Level { get; set; } //Nivel
             public int Coins { get; set; } //Moedas
@@ -166,7 +171,7 @@ namespace ConsoleGame
                 bonus = true;
             }
 
-            public override void ActivateBonus() //Polymorphism
+            public override void ActivateBonus() 
             {
                 if (bonus)
                 {
@@ -214,12 +219,7 @@ namespace ConsoleGame
             Console.Write("Digite o número do nível: ");
             string? nivel = Console.ReadLine();
 
-            if (string.IsNullOrEmpty(nivel))
-            {
-                Console.WriteLine("Nível inválido. Escolha um nível válido.");
-            }
-            else
-            {
+           
                 switch (nivel)
                 {
                     case "1":
@@ -234,10 +234,6 @@ namespace ConsoleGame
                         if (player != null && player.Level >= 2)
                         {
                             NivelDois();
-                        }
-                        else if (player != null && player.Level > 1)
-                        {
-                            Console.WriteLine("Você já completou o Nível 2. Avance para o próximo nível!");
                         }
                         else
                         {
@@ -258,13 +254,10 @@ namespace ConsoleGame
                         MenuInfo();
                         break;
                     default:
-                        Console.WriteLine("Nível inválido. Escolha um nível válido.");
                         break;
                 }
-            }
-            Console.WriteLine("Pressione qualquer tecla para voltar ao menu...");
-            Console.ReadKey();
-            MenuInfo();        }
+            
+        }
 
         public void NivelUm()
         {
@@ -378,7 +371,7 @@ namespace ConsoleGame
                                     Thread.Sleep(2000);
                                     Console.CursorVisible = true;
                                     Console.Clear();
-                                    IniciarJogo();
+                                    MenuInfo();
                                     return;
                                 }
                             }
@@ -419,21 +412,21 @@ namespace ConsoleGame
                 Console.CursorVisible = true;
         }
 
-        private string ComputeSha256Hash(string input)
+        private string ComputeMd5Hash(string input)
+        {
+            using (var md5 = System.Security.Cryptography.MD5.Create())
             {
-                using (var sha256 = System.Security.Cryptography.SHA256.Create())
-                {
-                    var bytes = System.Text.Encoding.UTF8.GetBytes(input);
-                    var hash = sha256.ComputeHash(bytes);
-                    return BitConverter.ToString(hash).Replace("-", "").ToLower();
-                }
+                var bytes = System.Text.Encoding.UTF8.GetBytes(input);
+                var hash = md5.ComputeHash(bytes);
+                return BitConverter.ToString(hash).Replace("-", "").ToLower();
             }
+        }
         public void NivelDois()
         {
             Console.Clear();
             string key = "redpill";
             string message = "Bem-vindo a Zion!";
-            string hash = ComputeSha256Hash(key);
+            string hash = ComputeMd5Hash(key);
             int maxAttempts = player.Name == "Trinity" ? 3 : 2;
             int attemptsLeft = maxAttempts;
             bool trinityBonusUsed = false;
@@ -441,8 +434,8 @@ namespace ConsoleGame
             // Bordas e interface
 
 
-            string hashShort = hash.Length > 48 ? hash.Substring(0, 48) : hash;
-            string hashRest = hash.Length > 48 ? hash.Substring(48) : "";
+            string hashShort = hash;
+           
 
 
             Console.WriteLine(@"
@@ -463,10 +456,10 @@ namespace ConsoleGame
                 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿");
             // Render a linha da borda, o hash e o alinhamento correto
             Console.WriteLine("\n");
-            Console.WriteLine($"Hash alvo: {hashShort,-48}");
-            if (!string.IsNullOrEmpty(hashRest))
-                Console.WriteLine($"{hashRest,-58}");
-            Console.WriteLine($"{hashRest,-58}");
+            Console.WriteLine($"Hash alvo: {hashShort,-32}");
+
+           
+            
 
             Console.WriteLine($"Vida: {player.Health,-6} | Moedas: {player.Coins,-6} | Tentativas: {attemptsLeft}/{maxAttempts,-2}{"",-13}");
 
@@ -502,7 +495,7 @@ namespace ConsoleGame
                 else
                 {
                     Console.WriteLine("Chave incorreta. Sistema de segurança ativado!");
-                    player.Health -= 50;
+                    player.Health -= 10;
                     if (player.Health <= 0)
                     {
                         // Bônus Trinity: mais uma chance
@@ -524,7 +517,7 @@ namespace ConsoleGame
                             Console.Write($"Game Over. Vida: {player.Health}.");
                             Console.WriteLine("Você retornou ao Nível 1.");
                             player.Level = 1; // Volta para o nível 1
-                            IniciarJogo();
+                            MenuInfo();
                             Console.ReadKey();
                             return;
                         }
@@ -557,7 +550,7 @@ namespace ConsoleGame
                         }
                     }
                     Console.WriteLine("╔═══════════════════════════════════════════════════════╗");
-                    Console.WriteLine($" Vida: {player.Health} | Moedas: {player.Coins} | Tentativas: {attemptsLeft}/{maxAttempts}                ");
+                    Console.WriteLine($" Vida: {player.Health} | Moedas: {player.Coins} | Tentativas: {attemptsLeft}/{maxAttempts}");
                     Console.WriteLine("╚═══════════════════════════════════════════════════════╝");
                 }
             }
@@ -621,7 +614,7 @@ namespace ConsoleGame
                     {
                         Console.WriteLine("Você perdeu toda a vida! Voltando ao Nível 1...");
                         player.Level = 1;
-                        IniciarJogo();
+                        MenuInfo();
                         return;
                     }
                     Thread.Sleep(1200);
@@ -756,7 +749,6 @@ namespace ConsoleGame
                         Console.ResetColor();
                         Thread.Sleep(350);
                     }
-                    Console.WriteLine();
                     break;
                 case "3":
                     Manual();
@@ -789,9 +781,9 @@ namespace ConsoleGame
                     break;
                 case "6":
                     player.ShowPlayer();
+                    MenuInfo();
                     break;
                 default:
-                    Console.WriteLine("Opção inválida. Tente novamente.");
                     break;
             }
 
