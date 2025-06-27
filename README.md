@@ -7,7 +7,7 @@ Matrix RPG é um jogo de RPG baseado em console desenvolvido em C#. Ele apresent
 
 ## Funcionalidades
 
-* **Seleção de Personagens**: Escolha entre personagens icônicos da Matrix como Neo, Trinity e Morpheus, cada um com atributos únicos.
+* **Seleção de Personagens**: Escolha entre personagens da Matrix como Neo, Trinity e Morpheus, cada um com atributos únicos.
 * **Loja no Jogo**: Compre novos personagens usando moedas do jogo.
     * Preços de personagens: Neo (2000 moedas), Trinity (1500 moedas), Morpheus (600 moedas).
 * **Múltiplos Níveis**:
